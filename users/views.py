@@ -1,5 +1,10 @@
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
-def index(request):
-    return HttpResponse('Страница приложения users')
+def login_user(request):
+    return render(request, 'users/login.html')
+
+
+def logout_user(request):
+    return HttpResponse('logout')

@@ -1,0 +1,212 @@
+/* --- Базовые стили и сброс --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Удобнее считать размеры блоков */
+}
+
+html {
+    height: 100%; /* Растягиваем html на всю высоту */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f0f4f8; /* Светло-голубой фон, как небо */
+    color: #333;
+    display: flex; /* Используем Flexbox для прижатия футера */
+    flex-direction: column; /* Элементы body в столбец */
+    min-height: 100%; /* Растягиваем body */
+}
+
+.container {
+    width: 90%;
+    max-width: 1100px; /* Ограничиваем максимальную ширину */
+    margin: 0 auto; /* Центрируем контейнер */
+    padding: 0 15px;
+}
+
+a {
+    color: #007bff; /* Синий цвет ссылок */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+a:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+ul {
+    list-style: none; /* Убираем маркеры у списков */
+}
+
+/* --- Шапка (Header) --- */
+.site-header {
+    background-color: #6cb2eb; /* Голубой цвет шапки */
+    padding: 1rem 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #fff; /* Белый текст в шапке */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Лого слева, навигация справа */
+    align-items: center;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff; /* Белый цвет логотипа */
+}
+.navbar-brand:hover {
+    text-decoration: none;
+}
+
+.navbar-nav {
+    display: flex;
+}
+
+.nav-item {
+    margin-left: 1rem; /* Отступ между пунктами меню */
+}
+
+.nav-link {
+    color: #fff;
+    padding: 0.5rem;
+    display: block; /* Чтобы padding работал */
+}
+.nav-link:hover {
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.1); /* Легкая подсветка при наведении */
+    border-radius: 4px;
+}
+
+/* Стиль для кнопки Выйти, чтобы она выглядела как ссылка */
+.button-link {
+    background: none;
+    border: none;
+    padding: 0.5rem; /* Как у nav-link */
+    margin: 0;
+    color: #fff; /* Как у nav-link */
+    font-family: inherit; /* Наследуем шрифт */
+    font-size: inherit; /* Наследуем размер */
+    cursor: pointer;
+    display: inline; /* Или block, если нужно как nav-link */
+}
+.button-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+
+/* --- Основной контент (Main) --- */
+.main-content {
+    flex-grow: 1; /* Занимает все доступное пространство между шапкой и футером */
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+h1, h2, h3 {
+    margin-bottom: 1rem;
+    color: #3a6b9b; /* Темно-синий для заголовков */
+}
+
+/* --- Формы (Общие стили) --- */
+form {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+form p { /* Стили для параграфов, генерируемых form.as_p */
+    margin-bottom: 1rem;
+}
+
+form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form select,
+form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+form button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+form button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для ошибок валидации формы (пример) */
+.errorlist {
+    color: #dc3545; /* Красный цвет для ошибок */
+    list-style: none;
+    padding: 0;
+    margin-top: -0.5rem; /* Подвинуть ближе к полю */
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+/* --- Сообщения Django --- */
+.messages {
+    padding: 0; /* Убираем отступы у контейнера сообщений */
+    margin-bottom: 1.5rem;
+}
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+.alert-success { /* Зеленый для успеха */
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+.alert-info { /* Синий для информации */
+    color: #0c5460;
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+}
+.alert-warning { /* Желтый для предупреждений */
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+.alert-error { /* Красный для ошибок */
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+
+/* --- Подвал (Footer) --- */
+.site-footer {
+    background-color: #465a6c; /* Темно-серый/синий для футера */
+    color: #ccc; /* Светло-серый текст */
+    padding: 1.5rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: auto; /* Прижимаем футер к низу, если контента мало */
+}
