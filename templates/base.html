@@ -4,73 +4,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Погодное приложение{% endblock title %}</title> {# Базовый заголовок и блок для переопределения #}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}"> {# Подключаем CSS #}
+    <title>{% block title %}Погодное приложение{% endblock title %}</title>
+    {# Базовый заголовок и блок для переопределения #}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {# Подключаем CSS #}
     {% block head_extra %}{% endblock head_extra %} {# Дополнительный блок для <head>, если нужно #}
 </head>
 <body>
-    <header class="site-header">
-        <nav class="container navbar">
-            <a>🌦️ WeatherApp</a> {# Ссылка на главную (список локаций), ИЗМЕНИТЕ URL NAME #}
+<header class="site-header">
+    <nav class="container navbar">
+        <a href="{% url 'home' %}" class="nav-link">🌦️ WeatherApp</a>
+        {# Ссылка на главную (список локаций), ИЗМЕНИТЕ URL NAME #}
 
-            <ul class="navbar-nav">
-                {% if user.is_authenticated %}
-                    {# Если пользователь вошел #}
-                    <li class="nav-item">
-                        <span class="nav-link">Привет, {{ user.username }}!</span>
-                    </li>
-                    <li class="nav-item">
-                        {# Ссылка на профиль или настройки (предполагаемый URL name) #}
-                        {# <a href="{% url 'users:profile' %}" class="nav-link">Профиль</a> #}
-                    </li>
-                     <li class="nav-item">
-                        {# Ссылка на добавление локации (предполагаемый URL name) #}
-                         <a href="{% url 'weather:location_add' %}" class="nav-link">Добавить локацию</a>
-                    </li>
-                    <li class="nav-item">
-                         <form action="{% url 'users:logout' %}" method="post" style="display: inline;">
-                             {% csrf_token %}
-                             <button type="submit" class="nav-link button-link">Выйти</button>
-                         </form>
-                    </li>
-                {% else %}
-                    {# Если пользователь не вошел #}
-                    <li class="nav-item">
-                        <a href="{% url 'users:login' %}" class="nav-link">Войти</a> {# ИЗМЕНИТЕ URL NAME, если нужно #}
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'users:login' %}" class="nav-link">Регистрация</a> {# ИЗМЕНИТЕ URL NAME, если нужно #}
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
-    </header>
+        <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+                {# Если пользователь вошел #}
+                <li class="nav-item">
+                    <span class="nav-link">Привет, {{ user.username }}!</span>
+                </li>
+                <li class="nav-item">
+                    {# Ссылка на профиль или настройки (предполагаемый URL name) #}
+                    {# <a href="{% url 'users:profile' %}" class="nav-link">Профиль</a> #}
+                </li>
+                <li class="nav-item">
+                    {# Ссылка на добавление локации (предполагаемый URL name) #}
+                    <a href="#"{# href="{% url 'weather:location_add' %}" #} class="nav-link">Добавить локацию</a>
+                </li>
+                
+                <li class="nav-item">
+                    <form method="post" action="{% url 'users:logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-link">Выйти</button>
+                        <!-- Стилизовать как ссылку -->
+                    </form>
+                </li>
+            {% else %}
+                {# Если пользователь не вошел #}
+                <li class="nav-item">
+                    <a href="{% url 'users:login' %}" class="nav-link">Войти</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'users:login' %}" class="nav-link">Регистрация</a>
+                    {# ИЗМЕНИТЕ URL NAME, если нужно #}
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>
 
-    <main class="container main-content">
-        {# Отображение сообщений Django (например, после успешной регистрации) #}
-        {% if messages %}
-            <div class="messages">
-                {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        {% endif %}
-
-        {# Основной контент страницы будет вставлен сюда #}
-        {% block content %}
-            <p>Это базовый шаблон. Контент страницы должен быть здесь.</p>
-        {% endblock content %}
-    </main>
-
-    <footer class="site-footer">
-        <div class="container">
-            <p>© {% now "Y" %} Погодное приложение. Все права защищены (или нет 😉).</p>
+<main class="container main-content">
+    {# Отображение сообщений Django (например, после успешной регистрации) #}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         </div>
-    </footer>
+    {% endif %}
 
-    {# Место для дополнительных скриптов в конце body #}
-    {% block scripts %}{% endblock scripts %}
+    {# Основной контент страницы будет вставлен сюда #}
+    {% block content %}
+        <p>Это базовый шаблон. Контент страницы должен быть здесь.</p>
+    {% endblock content %}
+</main>
+
+<footer class="site-footer">
+    <div class="container">
+        <p>© {% now "Y" %} Погодное приложение. Все права защищены (или нет 😉).</p>
+    </div>
+</footer>
+
+{# Место для дополнительных скриптов в конце body #}
+{% block scripts %}{% endblock scripts %}
 </body>
 </html>

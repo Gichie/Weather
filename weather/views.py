@@ -1,8 +1,9 @@
 from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render
 
 
 def index(request):
-    return HttpResponse('Страница приложения погода')
+    return render(request, 'base.html')
 
 
 def page_not_found(request, exception):

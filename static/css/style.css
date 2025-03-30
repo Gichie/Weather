@@ -58,6 +58,7 @@ ul {
     font-weight: bold;
     color: #fff; /* Белый цвет логотипа */
 }
+
 .navbar-brand:hover {
     text-decoration: none;
 }
@@ -68,36 +69,28 @@ ul {
 
 .nav-item {
     margin-left: 1rem; /* Отступ между пунктами меню */
+    display: flex; /* Добавим flex для выравнивания элементов внутри li */
+    align-items: center; /* Вертикальное выравнивание по центру */
 }
 
 .nav-link {
     color: #fff;
     padding: 0.5rem;
     display: block; /* Чтобы padding работал */
+    transition: background-color 0.1s ease; /* Плавный переход для ховера */
 }
+
 .nav-link:hover {
     text-decoration: none;
     background-color: rgba(255, 255, 255, 0.1); /* Легкая подсветка при наведении */
-    border-radius: 4px;
+    border-radius: 5px;
 }
 
-/* Стиль для кнопки Выйти, чтобы она выглядела как ссылка */
-.button-link {
-    background: none;
-    border: none;
-    padding: 0.5rem; /* Как у nav-link */
-    margin: 0;
-    color: #fff; /* Как у nav-link */
-    font-family: inherit; /* Наследуем шрифт */
-    font-size: inherit; /* Наследуем размер */
-    cursor: pointer;
-    display: inline; /* Или block, если нужно как nav-link */
+.nav-item form {
+    margin: 0; /* Убираем внешние отступы у формы */
+    padding: 0; /* Убираем внутренние отступы у формы */
+    display: inline; /* Делаем форму строчным элементом, чтобы не переносила кнопку */
 }
-.button-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    border-radius: 4px;
-}
-
 
 /* --- Основной контент (Main) --- */
 .main-content {
@@ -113,10 +106,8 @@ h1, h2, h3 {
 
 /* --- Формы (Общие стили) --- */
 form {
-    background-color: #fff;
-    padding: 1.5rem;
+    padding: 1rem;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
 }
 
@@ -128,7 +119,6 @@ form label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: bold;
-    color: #555;
 }
 
 form input[type="text"],
@@ -144,7 +134,7 @@ form textarea {
 }
 
 form button[type="submit"] {
-    background-color: #007bff;
+    background-color: #6cb2eb;
     color: #fff;
     padding: 0.75rem 1.5rem;
     border: none;
@@ -154,9 +144,6 @@ form button[type="submit"] {
     transition: background-color 0.2s ease;
 }
 
-form button[type="submit"]:hover {
-    background-color: #0056b3;
-}
 
 /* Стили для ошибок валидации формы (пример) */
 .errorlist {
@@ -173,27 +160,32 @@ form button[type="submit"]:hover {
     padding: 0; /* Убираем отступы у контейнера сообщений */
     margin-bottom: 1.5rem;
 }
+
 .alert {
     padding: 1rem;
     margin-bottom: 1rem;
     border: 1px solid transparent;
     border-radius: 4px;
 }
+
 .alert-success { /* Зеленый для успеха */
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
 }
+
 .alert-info { /* Синий для информации */
     color: #0c5460;
     background-color: #d1ecf1;
     border-color: #bee5eb;
 }
+
 .alert-warning { /* Желтый для предупреждений */
     color: #856404;
     background-color: #fff3cd;
     border-color: #ffeeba;
 }
+
 .alert-error { /* Красный для ошибок */
     color: #721c24;
     background-color: #f8d7da;
