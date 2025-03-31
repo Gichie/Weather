@@ -8,36 +8,43 @@ class LoginUserForm(AuthenticationForm):
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
 
+User = get_user_model()
+
+
 class RegisterUserForm(forms.ModelForm):
     username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Подтвердите пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     email = forms.EmailField(
         label='E-mail',
         required=False,
         widget=forms.EmailInput(attrs={'placeholder': 'Необязательно', 'class': 'form-input'})
     )
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label='Подтвердите пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
-        model = get_user_model()
-        fields = ['username', 'email', 'password', 'password2']
-
-
-    '''def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['email'].requred = False
-        self.fields['email'].widget.attrs.update({'placeholder': 'Необязательно', 'class': 'form-input'})'''
+        model = User
+        fields = ('username', 'email')
 
     def clean_password2(self):
         cd = self.cleaned_data
-        if cd['password'] != cd['password2']:
+        password = cd.get('password')
+        password2 = cd.get('password2')
+        if password and password2 and password != password2:
             raise forms.ValidationError('Пароли не совпадают')
-        return cd.get('password2')
+        return password2
 
     def clean_email(self):
-        email = self.cleaned_data.get('email', '')
+        email = self.cleaned_data.get('email')
         if email:
             email = email.lower()
-            if get_user_model().objects.filter(email=email).exists():
+            if User.objects.filter(email=email).exists():
                 raise forms.ValidationError('Такой E-mail уже существует')
         return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+
+        if commit:
+            user.save()
+        return user
