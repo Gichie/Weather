@@ -1,9 +1,9 @@
-from django.contrib.auth import logout
+from django.contrib import messages
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
-from users.forms import LoginUserForm
+from django.shortcuts import render, redirect
+
+from users.forms import LoginUserForm, RegisterUserForm
 
 
 class LoginUser(LoginView):
@@ -12,3 +12,15 @@ class LoginUser(LoginView):
     extra_context = {'title': 'Авторизация'}
 
 
+def register(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.success(request, 'Регистрация прошла успешно! Теперь вы можете войти.')
+            return redirect('users:login')
+    else:
+        form = RegisterUserForm()
+    return render(request, 'users/register.html', {'form': form})

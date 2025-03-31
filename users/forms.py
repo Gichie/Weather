@@ -4,5 +4,40 @@ from django.contrib.auth.forms import AuthenticationForm
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Имя пользователя / E-mail', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+
+class RegisterUserForm(forms.ModelForm):
+    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(
+        label='E-mail',
+        required=False,
+        widget=forms.EmailInput(attrs={'placeholder': 'Необязательно', 'class': 'form-input'})
+    )
+    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Подтвердите пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = get_user_model()
+        fields = ['username', 'email', 'password', 'password2']
+
+
+    '''def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['email'].requred = False
+        self.fields['email'].widget.attrs.update({'placeholder': 'Необязательно', 'class': 'form-input'})'''
+
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('Пароли не совпадают')
+        return cd.get('password2')
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email', '')
+        if email:
+            email = email.lower()
+            if get_user_model().objects.filter(email=email).exists():
+                raise forms.ValidationError('Такой E-mail уже существует')
+        return email

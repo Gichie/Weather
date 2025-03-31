@@ -1,7 +1,7 @@
 from django.urls import path
 
-from weather import views
+from weather.views import IndexView
 
 urlpatterns = [
-    path('', views.index, name='home')
+    path('', IndexView.as_view(), name='home')
 ]
