@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Форма поиска</h1>
-    <h1>Добавленные города</h1>
+
+    <form method="get" action="#">
+        <p>{{ search_form.location }}</p>
+        <p>
+            <button type="submit">Найти</button>
+        </p>
+
+    </form>
+
+    <h1>Добавленные пользователем города</h1>
 
 {% endblock content %}
 
