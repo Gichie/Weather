@@ -28,24 +28,21 @@ class LocationSearchView(LoginRequiredMixin, View):
         context: dict[str, Any] = {
             'locations_dto': [],
             'error_message': None,
-            'query': '',
-            'search_form': SearchLocationForm(self.request.GET or None)
+            'search_form': SearchLocationForm()
         }
 
         query = request.GET.get('location', '').strip()
-        context['query'] = query
 
         if query:
             try:
                 locations_dto: list[LocationDTO] = services.WeatherAPI.find_locations(query)
-
                 if not locations_dto:
                     context['error_message'] = f'Локации с названием {query} не найднены'
                 else:
                     context['locations_dto'] = locations_dto
 
             except WeatherServiceError as e:
-                context['error_message'] = f'Ошибка сервиса при поиске локация: {e}'
+                context['error_message'] = f'Ошибка сервиса при поиске локаций: {e}'
                 # todo logger
                 print(f'Ошибка в LocationSearchView: {e}')
 

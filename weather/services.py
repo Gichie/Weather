@@ -19,11 +19,6 @@ class WeatherAPI:
 
         params = {'q': query, 'limit': GEOCODING_LIMIT, 'appid': WEATHER_API_KEY}
 
-        request = requests.Request('GET', GEOCODING_API_URL, params=params)
-        prepared_request = request.prepare()
-
-        print("URL, который будет отправлен:", prepared_request.url)
-
         try:
             response = requests.get(GEOCODING_API_URL, params=params, timeout=API_TIMEOUT)
             response.raise_for_status()
