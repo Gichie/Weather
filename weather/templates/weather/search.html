@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Поиск локаций - {{ block.super }}{% endblock title %}
+
+{% block content %}
+    <form method="get" action="{% url 'weather:search' %}">
+        <p>{{ search_form.location }}</p>
+        <p>
+            <button type="submit">Найти</button>
+        </p>
+    </form>
+
+    <div class="results-container">
+        {% if error_message %}
+            <p class="error">{{ error_message }}</p>
+        {% endif %}
+
+        {% if locations_dto %}
+            <h2>Найденные локации: </h2>
+            <ul class="location-list">
+                {% for loc_dto in locations_dto %}
+                    <li>
+                        <div class="location-info">
+                            <strong>{{ loc_dto.name }}</strong>
+                            {% if loc_dto.state %}, {{ loc_dto.state }}{% endif %}
+                            {% if loc_dto.country %}, {{ loc_dto.country }}{% endif %}
+                            <br>
+                            <span>Координаты: {{ loc_dto.latitude|floatformat:4 }}, {{ loc_dto.longitude|floatformat:4 }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% elif query and not error_message %}
+            <p>Ничего не найдено для "{{ query }}".</p>
+        {% endif %}
+    </div>
+{% endblock content %}

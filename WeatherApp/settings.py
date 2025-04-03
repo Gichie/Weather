@@ -87,6 +87,8 @@ DATABASES = {
     }
 }
 
+WEATHER_API_KEY = os.environ.get("WEATHER_API")
+
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 

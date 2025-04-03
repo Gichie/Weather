@@ -2,7 +2,7 @@
 
 {% block content %}
 
-    <form method="get" action="#">
+    <form method="get" action="{% url 'weather:search' %}">
         <p>{{ search_form.location }}</p>
         <p>
             <button type="submit">Найти</button>

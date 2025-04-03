@@ -1,20 +1,17 @@
-{% load static %} {# Загружаем теги для статических файлов #}
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Погодное приложение{% endblock title %}</title>
-    {# Базовый заголовок и блок для переопределения #}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    {# Подключаем CSS #}
-    {% block head_extra %}{% endblock head_extra %} {# Дополнительный блок для <head>, если нужно #}
+    {% block head_extra %}{% endblock head_extra %}
 </head>
 <body>
 <header class="site-header">
     <nav class="container navbar">
-        <a href="{% url 'home' %}" class="nav-link">🌦️ WeatherApp</a>
-        {# Ссылка на главную (список локаций), ИЗМЕНИТЕ URL NAME #}
+        <a href="{% url 'weather:home' %}" class="nav-link">🌦️ WeatherApp</a>
 
         <ul class="navbar-nav">
             {% if user.is_authenticated %}
@@ -23,12 +20,8 @@
                     <span class="nav-link">Привет, {{ user.username }}!</span>
                 </li>
                 <li class="nav-item">
-                    {# Ссылка на профиль или настройки (предполагаемый URL name) #}
-                    {# <a href="{% url 'users:profile' %}" class="nav-link">Профиль</a> #}
-                </li>
-                <li class="nav-item">
                     {# Ссылка на добавление локации (предполагаемый URL name) #}
-                    <a href="#"{# href="{% url 'weather:location_add' %}" #} class="nav-link">Добавить локацию</a>
+                    <a href="{% url 'weather:home' %}" class="nav-link">Добавить локацию</a>
                 </li>
 
                 <li class="nav-item">
