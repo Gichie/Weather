@@ -9,11 +9,6 @@
         </p>
     </form>
 
-    <div class="results-container">
-        {% if error_message %}
-            <p class="error">{{ error_message }}</p>
-        {% endif %}
-
         {% if locations_dto %}
             <h2>Найденные локации: </h2>
             <ul class="location-list">
@@ -26,6 +21,18 @@
                             <br>
                             <span>Координаты: {{ loc_dto.latitude|floatformat:4 }}, {{ loc_dto.longitude|floatformat:4 }}</span>
                         </div>
+
+                        <div class="location-add">
+                            <form method="post" action="{% url 'weather:search' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="location_name" value="{{ loc_dto.name }}">
+                                <input type="hidden" name="location_latitude" value="{{ loc_dto.latitude }}">
+                                <input type="hidden" name="location_longitude" value="{{ loc_dto.longitude }}">
+                                <input type="hidden" name="location_country" value="{{ loc_dto.country }}">
+                                <button type="submit">Добавить</button>
+                            </form>
+                        </div>
+
                     </li>
                 {% endfor %}
             </ul>

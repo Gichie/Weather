@@ -10,7 +10,14 @@
 
     </form>
 
-    <h1>Добавленные пользователем города</h1>
+    <h2>Сохранённые локации:</h2>
+    <ul>
+    {% for location in locations %}
+        <li>{{ location.name }}, {{ location.country }} ({{ location.latitude }}, {{ location.longitude }})</li>
+    {% empty %}
+        <li>Нет сохранённых локаций.</li>
+    {% endfor %}
+</ul>
 
 {% endblock content %}
 

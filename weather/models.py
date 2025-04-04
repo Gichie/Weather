@@ -6,11 +6,11 @@ class Location(models.Model):
     name = models.CharField(max_length=190)
     country = models.CharField(max_length=80, blank=True, null=True)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='locations')
-    latitude = models.DecimalField(max_digits=8, decimal_places=5)
-    longitude = models.DecimalField(max_digits=8, decimal_places=5)
+    latitude = models.DecimalField(max_digits=10, decimal_places=7)
+    longitude = models.DecimalField(max_digits=10, decimal_places=7)
 
     def __str__(self):
-        return f'{self.name}({self.country})'
+        return f'{self.name}, {self.country}'
 
     class Meta:
         verbose_name = 'Локация'
