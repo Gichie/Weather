@@ -1,14 +1,12 @@
+from json import JSONDecodeError
+
 import requests
 from requests import RequestException, Timeout
 
 from WeatherApp.settings import WEATHER_API_KEY
+from weather.config import GEOCODING_LIMIT, GEOCODING_API_URL, WEATHER_API_URL, API_TIMEOUT
 from weather.dtos import LocationDTO, WeatherDTO
 from weather.exceptions import GeocodingApiError
-
-GEOCODING_API_URL = 'https://api.openweathermap.org/geo/1.0/direct'
-WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
-GEOCODING_LIMIT = 5
-API_TIMEOUT = 10
 
 
 class WeatherAPI:
@@ -62,10 +60,10 @@ class WeatherAPI:
             return response.json()
 
         except Timeout:
-            raise GeocodingApiError('Превышено время ожидания от GeocodingAPI.')
-        except RequestException as e:
+            raise GeocodingApiError('Превышено время ожидания от OpenWeatherAPI.')
+        except RequestException:
             # todo logging
-            raise GeocodingApiError(f'Ошибка сети при поиске локаций: {e}')
-        except ValueError:
+            raise GeocodingApiError(f'Ошибка сети при поиске локаций.')
+        except (ValueError, JSONDecodeError):
             # todo logging
-            raise GeocodingApiError('Не удалось обработать ответ от сервиса GeocodingAPI.')
+            raise GeocodingApiError('Не удалось обработать ответ от сервиса OpenWeatherAPI.')
