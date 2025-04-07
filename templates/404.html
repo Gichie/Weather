@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Страница не найдена (404) - {{ block.super }}{% endblock title %}
+
+{% block body_class %}error-page error-404{% endblock body_class %} {# Опционально: добавить классы для специфичного стиля #}
+
+{% block content %}
+<div class="container text-center my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <h1 class="display-1 text-primary fw-bold">404</h1>
+            <h2 class="mb-4">Страница не найдена</h2>
+            <p class="lead mb-4">
+                К сожалению, мы не смогли найти страницу, которую вы искали.
+                Возможно, она была перемещена, удалена или вы просто ошиблись в адресе.
+            </p>
+            {# Опционально: добавьте изображение, если хотите #}
+            <img src="{% static 'images/error.png' %}" alt="Грустный Пепе" class="img-fluid mb-4" style="max-height: 200px;">
+
+            <p class="mb-1">Попробуйте:</p>
+            <ul class="list-unstyled mb-4">
+                <li>Проверить правильность введенного URL.</li>
+                <li>Вернуться на <a href="{% url 'weather:home' %}" class="text-decoration-none">главную страницу</a>.</li>
+            </ul>
+
+            {# Можно добавить кнопку для возврата #}
+            <a href="{% url 'weather:home' %}" class="btn btn-primary btn-lg">Вернуться на главную</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block scripts %}
+{{ block.super }}
+{# Здесь можно добавить специфичные для 404 страницы скрипты, если нужно #}
+{% endblock scripts %}

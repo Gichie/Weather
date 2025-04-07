@@ -1,8 +1,10 @@
+
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom-bg shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{% url 'weather:home' %}">🌦️ WeatherApp</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -16,7 +18,9 @@
                         <li class="nav-item">
                             <form method="post" action="{% url 'users:logout' %}" class="m-0">
                                 {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link text-decoration-none px-2 text-white">Выйти</button>
+                                <button type="submit"
+                                        class="nav-link btn btn-link text-decoration-none px-2 text-white">Выйти
+                                </button>
                             </form>
                         </li>
                     {% else %}
