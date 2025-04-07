@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.defaults import permission_denied
+from django.views.defaults import permission_denied, bad_request
 
 from weather.views import page_not_found
 
@@ -28,3 +28,4 @@ urlpatterns = [
 
 handler404 = page_not_found
 handler403 = permission_denied
+handler400 = bad_request
