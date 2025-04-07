@@ -3,17 +3,17 @@ from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied, SuspiciousOperation
 from django.db import IntegrityError
-from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
 from django.views.generic import View, ListView
 
 from weather import services
 from weather.dtos import LocationDTO
-from weather.exceptions import WeatherServiceError
+from weather.exceptions import GeocodingApiError
 from weather.forms import SearchLocationForm
 from weather.models import Location
+from weather.services import WeatherAPI
 
 
 class IndexView(LoginRequiredMixin, ListView):
@@ -30,8 +30,20 @@ class IndexView(LoginRequiredMixin, ListView):
         locations_weather = []
         for location in locations:
             locations_weather.append(
-                services.WeatherAPI.get_weather(location.latitude, location.longitude, location.name))
+                WeatherAPI.get_weather(location.latitude, location.longitude, location.name))
         return locations_weather
+
+    def get(self, request, *args, **kwargs):
+        try:
+            return super().get(request, *args, **kwargs)
+
+        except GeocodingApiError as e:
+            # logger.error(f"Geocoding API Error for user {request.user.id}: {e}", exc_info=True)
+            context = {
+                'error_title': "Ошибка сервиса геолокации",
+                'error_message': f"Произошла ошибка при работе с сервисом геолокации. {e} Попробуйте обновить страницу позже."
+            }
+            return render(request, 'weather/API_error.html', context, status=503)
 
     def post(self, request):
         try:
@@ -67,11 +79,13 @@ class LocationSearchView(LoginRequiredMixin, View):
                     messages.warning(request, f"Локация {query} не найдена")
                 else:
                     context['locations_dto'] = locations_dto
-            except WeatherServiceError as e:
+
+            except GeocodingApiError as e:
                 context['error_message'] = f'Ошибка сервиса при поиске локаций: {e}'
                 # todo logger
                 print(f'Ошибка в LocationSearchView: {e}')
-        raise SuspiciousOperation("Тестовый неверный запрос 400!")
+                return render(request, 'weather/API_error.html', context, status=503)
+
         return render(request, self.template_name, context)
 
     def post(self, request):
