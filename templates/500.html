@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ошибка сервера (500) - {{ block.super }}{% endblock title %}
+
+{% block body_class %}error-page error-500{% endblock body_class %}
+
+{% block content %}
+    <div class="container text-center my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <h1 class="display-1 text-danger fw-bold">500</h1>
+                <h2 class="mb-4">Внутренняя ошибка сервера</h2>
+                <p class="lead mb-4">
+                    Что-то пошло не так на нашей стороне. Мы уже уведомлены и работаем над устранением проблемы.
+                </p>
+                <p class="mb-4">
+                    Пожалуйста, попробуйте обновить страницу через несколько минут или вернитесь на главную. Приносим
+                    извинения за неудобства!
+                </p>
+                <img src="{% static 'images/error.png' %}" alt="Ошибка сервера" class="img-fluid mb-4"
+                     style="max-height: 200px;">
+
+                <p><a href="{% url 'weather:home' %}" class="btn btn-primary btn-lg">Вернуться на главную</a></p>
+                {# Убедитесь, что URL 'index' существует и ведет на главную #}
+            </div>
+        </div>
+    </div>
+{% endblock content %}

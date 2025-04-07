@@ -91,36 +91,36 @@ form button[type="submit"] {
 }
 
 .site-footer {
-    background-color: #465a6c; /* Темно-серый/синий для футера */
-    color: #d3d3d3; /* Светло-серый текст */
+    background-color: #465a6c;
+    color: #d3d3d3;
     padding: 1.5rem 0;
     text-align: center;
     font-size: 1rem;
-    margin-top: auto; /* Прижимаем футер к низу, если контента мало */
+    margin-top: auto;
 }
 
 .error {
-    color: #721c24; /* Цвет из alert-error */
+    color: #721c24;
     font-weight: bold;
-    background-color: #f8d7da; /* Фон из alert-error */
+    background-color: #f8d7da;
     padding: 10px;
-    border: 1px solid #f5c6cb; /* Граница из alert-error */
+    border: 1px solid #f5c6cb;
     border-radius: 4px;
 }
 
+
 /* --- For Bootstrap --- */
+
+/* Header settings (color, ...) */
 .navbar-custom-bg {
-    background-color: #73b5f1;
+    background-color: #6cb2eb;
+    min-height: 64px;
 }
 
 .card-header-custom-bg {
-    background-color: #cde7ff; /* Ваш кастомный цвет */
-    /* Возможно, понадобится изменить цвет текста заголовка для контраста */
-    /* color: #fff; */ /* Раскомментируйте, если текст плохо видно на фоне */
+    background-color: #cde7ff;
 }
 
 .card .list-group-item {
-
-    /* Если применяли фон к списку или элементам, уберите его */
     background-color: transparent;
 }

@@ -3,6 +3,7 @@ from typing import Any
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.db import IntegrityError
 from django.http import HttpResponseNotFound, HttpRequest, HttpResponse
 from django.shortcuts import render, redirect
@@ -51,6 +52,7 @@ class LocationSearchView(LoginRequiredMixin, View):
     template_name = 'weather/search.html'
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:
+
         query = request.GET.get('location', '').strip()
         context: dict[str, Any] = {
             'locations_dto': [],
@@ -65,12 +67,12 @@ class LocationSearchView(LoginRequiredMixin, View):
                     messages.warning(request, f"Локация {query} не найдена")
                 else:
                     context['locations_dto'] = locations_dto
-
+                raise WeatherServiceError('ffffffffffffff')
             except WeatherServiceError as e:
                 context['error_message'] = f'Ошибка сервиса при поиске локаций: {e}'
                 # todo logger
                 print(f'Ошибка в LocationSearchView: {e}')
-
+        raise PermissionDenied
         return render(request, self.template_name, context)
 
     def post(self, request):
