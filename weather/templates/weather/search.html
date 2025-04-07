@@ -1,34 +1,10 @@
 {% extends 'base.html' %}
-{% load widget_tweaks %}
 {% load bootstrap5 %}
 
 {% block title %}Поиск локаций - {{ block.super }}{% endblock title %}
 
 {% block content %}
-    {# Форма поиска #}
-    <div class="row justify-content-center mb-4">
-        <div class="col-md-8 col-lg-12">
-            <form method="get" action="{% url 'weather:search' %}" class="p-3 bg-light border rounded shadow-sm">
-                <label for="{{ search_form.location.id_for_label }}" class="form-label visually-hidden">Местоположение</label> {# Скрываем label визуально, но оставляем для скринридеров #}
-                <div class="input-group">
-                    {% render_field search_form.location class="form-control form-control-lg" placeholder="Введите название локации" aria-label="Местоположение для поиска погоды" %}
-                    <button class="btn btn-primary" type="submit" id="button-search">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-                          <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                        <span class="visually-hidden">Найти</span> {# Скрываем текст для зрячих, но оставляем для скринридеров #}
-                    </button>
-                </div>
-                {% if search_form.location.errors %}
-                    <div class="text-danger mt-1">
-                        {% for error in search_form.location.errors %}
-                            <small>{{ error }}</small>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </form>
-        </div>
-    </div>
+    {% include 'includes/search_form.html' %}
 
     {# --- Результаты поиска --- #}
     {% if locations_dto %}
@@ -41,7 +17,8 @@
                             <div class="me-3">
                                 <strong class="fs-5">{{ loc_dto.name }}</strong>
                                 {% if loc_dto.state %}<span class="text-muted">, {{ loc_dto.state }}</span>{% endif %}
-                                {% if loc_dto.country %}<span class="text-muted">, {{ loc_dto.country }}</span>{% endif %}
+                                {% if loc_dto.country %}
+                                    <span class="text-muted">, {{ loc_dto.country }}</span>{% endif %}
                                 <br>
                                 <small class="text-muted">
                                     Координаты: {{ loc_dto.latitude|floatformat:4 }}, {{ loc_dto.longitude|floatformat:4 }}
@@ -49,18 +26,22 @@
                             </div>
 
                             <div class="location-add">
-                                <form method="post" action="{% url 'weather:search' %}" class="m-0"> {# Обновленный URL и m-0 #}
+                                <form method="post" action="{% url 'weather:search' %}" class="m-0">
+                                    {# Обновленный URL и m-0 #}
                                     {% csrf_token %}
                                     {# Передаем все необходимые данные #}
                                     <input type="hidden" name="location_name" value="{{ loc_dto.name }}">
                                     <input type="hidden" name="location_latitude" value="{{ loc_dto.latitude }}">
                                     <input type="hidden" name="location_longitude" value="{{ loc_dto.longitude }}">
-                                    <input type="hidden" name="location_country" value="{{ loc_dto.country|default:'' }}">
+                                    <input type="hidden" name="location_country"
+                                           value="{{ loc_dto.country|default:'' }}">
 
                                     {# Стилизуем кнопку с помощью Bootstrap #}
                                     <button type="submit" class="btn btn-success btn-sm">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
-                                          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                                            <path fill-rule="evenodd"
+                                                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
                                         </svg>
                                         Добавить
                                     </button>
@@ -71,15 +52,15 @@
                 </ul>
             </div>
         </div>
-    {# Сообщение, если ничего не найдено #}
+        {# Сообщение, если ничего не найдено #}
     {% elif error_message %}
-         <div class="row justify-content-center">
+        <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8">
                 <div class="alert alert-info" role="alert">
                     Ничего не найдено для запроса "{{ query }}". Попробуйте изменить запрос.
                 </div>
             </div>
-         </div>
+        </div>
     {% endif %}
 
 {% endblock content %}
