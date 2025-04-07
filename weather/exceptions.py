@@ -1,6 +1,2 @@
-class WeatherServiceError(Exception):
-    pass
-
-
-class GeocodingApiError(WeatherServiceError):
+class GeocodingApiError(Exception):
     pass

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ error_title|default:"Ошибка сервиса" }} - {{ block.super }}{% endblock title %}
+
+{% block content %}
+<div class="container text-center my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <h1 class="display-5 text-warning">{{ error_title|default:"Сервис временно недоступен" }}</h1>
+            <p class="lead mb-4">
+                {{ error_message|default:"Пожалуйста, попробуйте позже." }}
+            </p>
+            <p><img src="{% static 'images/error.png' %}" alt="Грустный Пепе" class="img-fluid mb-4" style="max-height: 400px;"></p>
+            <a href="{% url 'weather:home' %}" class="btn btn-primary btn-lg">На главную</a>
+            {# Можно добавить кнопку "Попробовать снова", если это имеет смысл #}
+            <button onclick="window.location.reload();" class="btn btn-secondary btn-lg ms-2">Попробовать снова</button>
+        </div>
+    </div>
+</div>
+{% endblock content %}
