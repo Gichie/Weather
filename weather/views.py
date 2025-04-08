@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 from typing import Any
 
@@ -15,6 +16,8 @@ from weather.forms import SearchLocationForm
 from weather.models import Location
 from weather.services import WeatherAPI
 
+logger = logging.getLogger(__name__)
+
 
 class IndexView(LoginRequiredMixin, ListView):
     template_name = 'weather/index.html'
@@ -26,8 +29,10 @@ class IndexView(LoginRequiredMixin, ListView):
         return context
 
     def get_queryset(self):
+        logger.info(f'Получение списка локаций из БД для <{self.request.user}>')
         locations = Location.objects.filter(user=self.request.user)
         locations_weather = []
+        logger.info(f'Получение текущей погоды для <{self.request.user}>')
         for location in locations:
             locations_weather.append(
                 WeatherAPI.get_weather(location.latitude, location.longitude, location.name))
@@ -38,7 +43,7 @@ class IndexView(LoginRequiredMixin, ListView):
             return super().get(request, *args, **kwargs)
 
         except GeocodingApiError as e:
-            # logger.error(f"Geocoding API Error for user {request.user.id}: {e}", exc_info=True)
+            logger.error(f"Geocoding API Error for user {request.user}: {e}", exc_info=True)
             context = {
                 'error_title': "Ошибка сервиса геолокации",
                 'error_message': f"Произошла ошибка при работе с сервисом геолокации. {e} Попробуйте обновить страницу позже."
@@ -51,10 +56,13 @@ class IndexView(LoginRequiredMixin, ListView):
             longitude = Decimal(request.POST.get('longitude').replace(',', '.'))
             location = Location.objects.get(user=request.user, latitude=latitude, longitude=longitude)
             location.delete()
+            logger.info(f'{self.request.user} удалил локацию из сохраненного списка')
             messages.success(request, "Локация удалена.")
         except Location.DoesNotExist:
+            logger.warning(f"Локация для удаления для {request.user} не найдена в БД", exc_info=True)
             messages.error(request, 'Локация не найдена')
         except Exception as e:
+            logger.error(f"Ошибка при удалении for user {request.user}: {e}", exc_info=True)
             messages.error(request, f"Ошибка при удалении: {str(e)}")
 
         return redirect('weather:home')
