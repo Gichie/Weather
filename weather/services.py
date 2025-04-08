@@ -1,3 +1,4 @@
+import logging
 from json import JSONDecodeError
 
 import requests
@@ -7,6 +8,8 @@ from WeatherApp.settings import WEATHER_API_KEY
 from weather.config import GEOCODING_LIMIT, GEOCODING_API_URL, WEATHER_API_URL, API_TIMEOUT
 from weather.dtos import LocationDTO, WeatherDTO
 from weather.exceptions import GeocodingApiError
+
+logger = logging.getLogger(__name__)
 
 
 class WeatherAPI:
@@ -37,20 +40,23 @@ class WeatherAPI:
         params = {'lat': latitude, 'lon': longitude, 'appid': WEATHER_API_KEY, 'units': 'metric', 'lang': 'ru'}
 
         data = WeatherAPI.get_json_by_weather_api(params, WEATHER_API_URL)
-
-        return WeatherDTO(
-            lat=latitude,
-            lon=longitude,
-            weather=data['weather'][0].get('description', 'неизвестно').capitalize(),
-            temp=round(data['main']['temp']),
-            feels_like=round(data['main']['feels_like']),
-            pressure=round(data['main']['pressure'] * 0.75),
-            humidity=data['main']['humidity'],
-            wind_speed=round(data['wind']['speed']),
-            country=data['sys']['country'],
-            name=name,
-            icon=data['weather'][0]['icon']
-        )
+        try:
+            return WeatherDTO(
+                lat=latitude,
+                lon=longitude,
+                weather=data['weather'][0].get('description', 'неизвестно').capitalize(),
+                temp=round(data['main']['temp']),
+                feels_like=round(data['main']['feels_like']),
+                pressure=round(data['main']['pressure'] * 0.75),
+                humidity=data['main']['humidity'],
+                wind_speed=round(data['wind']['speed']),
+                country=data['sys']['country'],
+                name=name,
+                icon=data['weather'][0]['icon']
+            )
+        except (KeyError, IndexError):
+            logger.error(f'Ошибка извлечения данных', exc_info=True)
+            raise GeocodingApiError('Ошибка извлечения данных')
 
     @staticmethod
     def get_json_by_weather_api(params, url):
@@ -60,10 +66,11 @@ class WeatherAPI:
             return response.json()
 
         except Timeout:
+            logger.warning(f"Превышено время ожидания от OpenWeatherAPI {url}.")
             raise GeocodingApiError('Превышено время ожидания от OpenWeatherAPI.')
         except RequestException:
-            # todo logging
+            logger.warning("Ошибка сети при поиске локаций.")
             raise GeocodingApiError(f'Ошибка сети при поиске локаций.')
         except (ValueError, JSONDecodeError):
-            # todo logging
+            logger.warning(f'Не удалось обработать ответ от сервиса OpenWeatherAPI {url}.')
             raise GeocodingApiError('Не удалось обработать ответ от сервиса OpenWeatherAPI.')

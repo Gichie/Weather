@@ -46,7 +46,7 @@ class IndexView(LoginRequiredMixin, ListView):
             logger.error(f"Geocoding API Error for user {request.user}: {e}", exc_info=True)
             context = {
                 'error_title': "Ошибка сервиса геолокации",
-                'error_message': f"Произошла ошибка при работе с сервисом геолокации. {e} Попробуйте обновить страницу позже."
+                'error_message': f"Произошла ошибка при работе с сервисом геолокации. Попробуйте обновить страницу позже."
             }
             return render(request, 'weather/API_error.html', context, status=503)
 
@@ -82,16 +82,17 @@ class LocationSearchView(LoginRequiredMixin, View):
         }
         if query:
             try:
+                logger.info(f'Получение списка локаций по названию <{query}> для {self.request.user}')
                 locations_dto: list[LocationDTO] = services.WeatherAPI.get_locations(query)
                 if not locations_dto:
+                    logger.info(f"Локация {query} не найдена")
                     messages.info(request, f"Локация {query} не найдена")
                 else:
                     context['locations_dto'] = locations_dto
 
             except GeocodingApiError as e:
-                context['error_message'] = f'Ошибка сервиса при поиске локаций: {e}'
-                # todo logger
-                print(f'Ошибка в LocationSearchView: {e}')
+                context['error_message'] = f'Ошибка сервиса при поиске локаций.'
+                logger.error(f'Ошибка при работе с OpenWeatherAPI в LocationSearchView: {e} у {self.request.user}', exc_info=True)
                 return render(request, 'weather/API_error.html', context, status=503)
 
         return render(request, self.template_name, context)
@@ -107,15 +108,18 @@ class LocationSearchView(LoginRequiredMixin, View):
                 latitude=Decimal(request.POST.get('location_latitude').replace(',', '.')),
                 longitude=Decimal(request.POST.get('location_longitude').replace(',', '.')),
             )
-            # todo logger Успешно добавлено
+            logger.info(f'Локация {name}, {country} успешно добавлена в БД для {self.request.user}')
             return redirect('weather:home')
         except (TypeError, ValueError):
+            messages.error(request, "Ошибка в полученных данных.")
+            logger.error(f'Ошибка данных при добавлении локации в БД у {self.request.user}', exc_info=True)
             return redirect('weather:home')
         except IntegrityError:
-            # todo logger
+            logger.info(f'{self.request.user} пытался добавить уже добавленную локацию')
             messages.warning(request, f"Выбранная локация {name}, {country} уже добавлена в вашу коллекцию")
             return redirect('weather:home')
 
 
 def page_not_found(request, exception):
+    logger.error('Страница не найдена', exc_info=True)
     return render(request, '404.html', status=404)

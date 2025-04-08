@@ -3,10 +3,13 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-LOGGING_DIR = BASE_DIR / 'logs' # Используем / для соединения путей
-LOGGING_DIR.mkdir(parents=True, exist_ok=True) # Создаем, если ее нет
+LOGGING_DIR = BASE_DIR / 'logs'  # Используем / для соединения путей
+LOGGING_DIR.mkdir(parents=True, exist_ok=True)  # Создаем, если ее нет
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -46,11 +49,10 @@ LOGGING = {
 
 }
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l-9(xiiickw1+0o)&vsgdqnvn@n4*-#%*v_l(5tacqb=yg48w)'
+load_dotenv()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.environ.get("SECRET_KEY"),
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
 
@@ -102,7 +104,6 @@ WSGI_APPLICATION = 'WeatherApp.wsgi.application'
 
 # Database
 
-load_dotenv()
 
 DATABASES = {
     "default": {
