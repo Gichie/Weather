@@ -56,7 +56,7 @@ class IndexView(LoginRequiredMixin, ListView):
             longitude = Decimal(request.POST.get('longitude').replace(',', '.'))
             location = Location.objects.get(user=request.user, latitude=latitude, longitude=longitude)
             location.delete()
-            logger.info(f'{self.request.user} удалил локацию из сохраненного списка')
+            logger.info(f'{self.request.user} удалил локацию')
             messages.success(request, "Локация удалена.")
         except Location.DoesNotExist:
             logger.warning(f"Локация для удаления для {request.user} не найдена в БД", exc_info=True)
@@ -84,7 +84,7 @@ class LocationSearchView(LoginRequiredMixin, View):
             try:
                 locations_dto: list[LocationDTO] = services.WeatherAPI.get_locations(query)
                 if not locations_dto:
-                    messages.warning(request, f"Локация {query} не найдена")
+                    messages.info(request, f"Локация {query} не найдена")
                 else:
                     context['locations_dto'] = locations_dto
 
