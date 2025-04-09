@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 class IndexView(LoginRequiredMixin, ListView):
     template_name = 'weather/index.html'
     context_object_name = 'locations_weather'
-    paginate_by = 3
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
