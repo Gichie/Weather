@@ -47,7 +47,7 @@ class IndexView(LoginRequiredMixin, ListView):
             logger.error(f"Geocoding API Error for user {request.user}: {e}", exc_info=True)
             context = {
                 'error_title': "Ошибка сервиса геолокации",
-                'error_message': f"Произошла ошибка при работе с сервисом геолокации. Попробуйте обновить страницу позже."
+                'error_message': "Произошла ошибка при работе с сервисом геолокации. Попробуйте обновить страницу позже."
             }
             return render(request, 'weather/API_error.html', context, status=503)
 
@@ -81,7 +81,9 @@ class LocationSearchView(LoginRequiredMixin, View):
             'search_form': SearchLocationForm(),
             'query': query,
         }
-        if query:
+        if not query:
+            messages.info(request, "Вы ничего не ввели. Введите название локации")
+        else:
             try:
                 logger.info(f'Получение списка локаций по названию <{query}> для {self.request.user}')
                 locations_dto: list[LocationDTO] = services.WeatherAPI.get_locations(query)
@@ -92,8 +94,9 @@ class LocationSearchView(LoginRequiredMixin, View):
                     context['locations_dto'] = locations_dto
 
             except GeocodingApiError as e:
-                context['error_message'] = f'Ошибка сервиса при поиске локаций.'
-                logger.error(f'Ошибка при работе с OpenWeatherAPI в LocationSearchView: {e} у {self.request.user}', exc_info=True)
+                context['error_message'] = 'Ошибка сервиса при поиске локаций.'
+                logger.error(f'Ошибка при работе с OpenWeatherAPI в LocationSearchView: {e} у {self.request.user}',
+                             exc_info=True)
                 return render(request, 'weather/API_error.html', context, status=503)
 
         return render(request, self.template_name, context)

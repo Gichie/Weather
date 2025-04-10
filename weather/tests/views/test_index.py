@@ -1,3 +1,4 @@
+import logging
 from decimal import Decimal
 from unittest.mock import patch
 
@@ -10,6 +11,8 @@ from weather.forms import SearchLocationForm
 from weather.models import Location
 
 User = get_user_model()
+
+logging.disable(logging.CRITICAL)
 
 
 class TestIndexView(TestCase):
