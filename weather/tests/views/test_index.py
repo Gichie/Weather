@@ -12,7 +12,7 @@ from weather.models import Location
 
 User = get_user_model()
 
-logging.disable(logging.CRITICAL)
+logging.disable()
 
 
 class TestIndexView(TestCase):

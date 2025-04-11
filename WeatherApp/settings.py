@@ -168,3 +168,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'weather:home'
 LOGOUT_REDIRECT_URL = 'users:login'
+
+SESSION_COOKIE_AGE = 604800
+SESSION_SAVE_EVERY_REQUEST = True
