@@ -35,7 +35,7 @@ class TestLocationSearchView(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'weather/search.html')
         self.assertIsInstance(response.context['search_form'], SearchLocationForm)
-        self.assertQuerysetEqual(response.context['locations_dto'], [])
+        self.assertQuerySetEqual(response.context['locations_dto'], [])
         self.assertIsNone(response.context['error_message'], None)
         self.assertEqual(response.context['query'], '')
 

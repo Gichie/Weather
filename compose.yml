@@ -1,0 +1,59 @@
+volumes:
+  postgres-data:
+  static_volume:
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: psgr
+    env_file:
+      - .env
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - dbnet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "user" ]  # Проверка готовности БД
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_app
+    restart: always
+    command: "gunicorn WeatherApp.wsgi:application --bind 0.0.0.0:8000 -w 4"
+    env_file:
+      - .env
+    networks:
+      - dbnet
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    restart: always
+    networks:
+      - dbnet
+    expose:
+      - 8088
+    ports:
+      - "80:8088"
+    volumes:
+      - ./static:/app/static
+      - ./static:/app/logs
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - web
+
+networks:
+  dbnet:
+    driver: bridge

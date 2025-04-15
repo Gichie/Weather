@@ -12,8 +12,8 @@ User = get_user_model()
 
 
 class RegisterUserForm(forms.ModelForm):
-    username = forms.CharField(label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(min_length=2, label='Имя пользователя', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    password = forms.CharField(min_length=2, label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     password2 = forms.CharField(label='Подтвердите пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     email = forms.EmailField(
         label='E-mail',
