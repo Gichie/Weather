@@ -13,7 +13,7 @@ services:
     networks:
       - dbnet
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "user" ]  # Проверка готовности БД
+      test: [ "CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}" ]  # Проверка готовности БД
       interval: 5s
       timeout: 5s
       retries: 5
@@ -24,7 +24,8 @@ services:
       dockerfile: Dockerfile
     container_name: django_app
     restart: always
-    command: "gunicorn WeatherApp.wsgi:application --bind 0.0.0.0:8000 -w 4"
+    command: sh -c "python manage.py migrate &&
+                    gunicorn WeatherApp.wsgi:application --bind 0.0.0.0:8000 -w 4"
     env_file:
       - .env
     networks:
