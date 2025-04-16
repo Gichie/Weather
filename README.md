@@ -2,7 +2,7 @@
 
 Веб-приложение для просмотра текущей погоды. Пользователь может зарегистрироваться и добавить в коллекцию одну или несколько локаций (городов, сёл, других пунктов), после чего главная страница приложения начинает отображать список локаций с их текущей погодой.
 
-Проект создан в рамках [учебного курса](https://zhukovsd.github.io/python-backend-learning-course/projects/weather-viewer/).
+Проект создан в рамках [учебного курса](https://zhukovsd.github.io/python-backend-learning-course/).
 Ссылка на ТЗ проекта: [https://zhukovsd.github.io/python-backend-learning-course/projects/weather-viewer/](https://zhukovsd.github.io/python-backend-learning-course/projects/weather-viewer/)
 
 ## Технологии
